@@ -12,9 +12,6 @@ try {
     console.error(e);
 }
 
-
-console.log("conn", conn);
-
 let db = conn.db("local");
 
 export default db;
