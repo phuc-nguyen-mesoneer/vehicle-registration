@@ -32,20 +32,20 @@ export const loginController = async (req, res) => {
     const { email, password } = req.body;
     const { errors, isValid } = validateLoginInput(req.body);
     if (!isEmpty(errors)) {
-        res.status(400).json(errors);
+        return res.status(400).json(errors);
     }
 
     if (isValid) {
         const existingUser = await getUserFromEmail(email);
         if (!existingUser) {
-            res.status(400).json({email: "Cannot find user with give email"});
+            return res.status(401).json({email: "Cannot find user with given email"});
         } else {
             const hashedPassword = existingUser.password;
-            console.log(JSON.stringify(existingUser));
             const isPasswordMatched = await bcrypt.compare(password, hashedPassword);
             if (isPasswordMatched) {
                 const JWTPayload = {
                     id: existingUser._id,
+                    name: existingUser.name,
                     email: existingUser.email
                 }
                 jwt.sign(
@@ -55,15 +55,34 @@ export const loginController = async (req, res) => {
                     (err, token) => {
                         if (err) {
                             console.error(err);
-                            res.status(500).json({internalError: err});
+                            return res.status(500).json({internalError: err});
                         } else {
-                            res.status(200).json({
+                            return res.status(200).json({
                                 success: true,
-                                JWT: token,
+                                token: token,
                             })
                         }
                     });
+            } else {
+                return res.status(401).json({
+                    password: 'Password does not match',
+                })
             }
         }
     }
 };
+
+export const verifyController = (req, res) => {
+    const {email, name} = req.user;
+    if (email && name) {
+        return res.status(200).json({
+            success: true,
+            email,
+            name
+        });
+    } else {
+        res.status(401).json({
+            error: 'Invalid token'
+        });
+    }
+}

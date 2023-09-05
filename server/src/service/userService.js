@@ -7,8 +7,8 @@ export const getUserFromEmail = async (email) => {
 }
 
 export const signUpNewUser = async (data) => {
-    const { name, email, password } = data;
-    const hash = await bcrypt.hash(password, 10);
+    const { name, email, password1 } = data;
+    const hash = await bcrypt.hash(password1, 10);
     const user = await db.collection('popousers').insertOne({
         email,
         name,

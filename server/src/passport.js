@@ -10,7 +10,7 @@ export default passport => {
     passport.use(
         new Strategy(opts, async (jwt_payload, done) => {
             try {
-                const user = await db.collection('popousers').find({email: jwt_payload.email});
+                const user = await db.collection('popousers').findOne({email: jwt_payload.email});
                 if (user) {
                     return done(null, user);
                 } else {

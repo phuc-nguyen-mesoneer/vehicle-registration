@@ -7,12 +7,13 @@ import passportConfig from './src/passport.js';
 import {
     signUpController,
     loginController,
+    verifyController
 } from './src/controller/userController.js';
 import {
-
+    generatePlateController,
 } from './src/controller/registrationController.js';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 
@@ -30,5 +31,9 @@ passportConfig(passport);
 app.post('/signup', signUpController);
 
 app.post('/login', loginController);
+
+app.get('/verify', passport.authenticate('jwt', {session: false}), verifyController);
+
+app.post('/generate-plate', generatePlateController);
 
 app.listen(PORT, () => console.log(`Server up and running on port ${PORT}`));
