@@ -63,8 +63,8 @@ export function validatePlateGenerationInput (data) {
     data.dateOfBirth = !isEmpty(data.dateOfBirth) ? data.dateOfBirth : "";
     data.email = !isEmpty(data.email) ? data.email : "";
     data.idNumber = !isEmpty(data.idNumber) ? data.idNumber : "";
-    data.acModel = !isEmpty(data.acModel) ? data.acModel : "";
-    data.callSign = !isEmpty(data.callSign) ? data.callSign : "";
+    data.model = !isEmpty(data.model) ? data.model : "";
+    data.brand = !isEmpty(data.brand) ? data.brand : "";
 
     if (validator.isEmpty(data.firstName)) {
         errors.firstName = "First Name is required";
@@ -83,20 +83,20 @@ export function validatePlateGenerationInput (data) {
         errors.email = "Email is invalid";
     }
     if (validator.isEmpty(data.idNumber)) {
-        errors.firstName = "First Name is required";
+        errors.idNumber = "Id Number is required";
     } else if (
-        !validator.isNumber(data.idNumber) ||
-        data.idNumber < 100000000 ||
-        (999999999 < data.idNumber < 100000000000) ||
-        data.idNumber > 999999999999
+        data.idNumber.length !== 9 && data.idNumber.length !== 12
     ) {
         errors.idNumber = "Invalid Identification Number";
     }
-    if (validator.isEmpty(data.acModel)) {
-        errors.acModel = "AC Model is required!";
+    if (validator.isEmpty(data.model)) {
+        errors.model = "Model is required!";
     }
-    if (validator.isEmpty(data.callSign)) {
-        errors.callSign = "Call Sign is required";
+    if (validator.isEmpty(data.brand)) {
+        errors.brand = "Car Brand is required";
+    }
+    if (validator.isEmpty(data.province)) {
+        errors.province = "City/Province is required";
     }
 
     return {

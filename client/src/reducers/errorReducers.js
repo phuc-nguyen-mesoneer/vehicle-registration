@@ -1,4 +1,10 @@
-import {LOGIN_SUCCESS, SET_LOGIN_ERRORS, SET_SIGNUP_ERRORS, SIGNUP_SUCCESS} from '../actions/types';
+import {
+    LOGIN_SUCCESS,
+    SET_LOGIN_ERRORS,
+    SET_REGISTRATION_FORM_ERRORS, SET_REGISTRATION_FORM_GENERATED,
+    SET_SIGNUP_ERRORS,
+    SIGNUP_SUCCESS
+} from '../actions/types';
 
 const initialState = {
     signUpError: {
@@ -15,7 +21,17 @@ const initialState = {
         password: null,
     },
     registrationFormError: {
-        email: null
+        firstName: null,
+        lastName: null,
+        dateOfBirth: null,
+        email: null,
+        idNumber: null,
+        model: null,
+        brand: null,
+        province: null,
+        address: null,
+        phoneNumber: null,
+        gender: null
     }
 }
 
@@ -53,6 +69,30 @@ export default function (state=initialState, action) {
                     email: null,
                     password1: null,
                     password2: null
+                }
+            }
+
+        case SET_REGISTRATION_FORM_ERRORS:
+            return {
+                ...state,
+                registrationFormError: action.payload
+            };
+
+        case SET_REGISTRATION_FORM_GENERATED:
+            return {
+                ...state,
+                registrationFormError: {
+                    firstName: null,
+                    lastName: null,
+                    dateOfBirth: null,
+                    email: null,
+                    idNumber: null,
+                    model: null,
+                    brand: null,
+                    province: null,
+                    address: null,
+                    phoneNumber: null,
+                    gender: null
                 }
             }
 
