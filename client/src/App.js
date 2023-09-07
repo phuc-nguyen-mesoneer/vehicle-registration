@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import NoPage from './pages/NoPage';
 import SignUp from './pages/SignUp';
 import Tasks from './pages/Tasks';
+import Dashboard from './pages/Dashboard';
 
 function App() {
     return (
@@ -17,6 +18,8 @@ function App() {
                         <Route index element={<RegistrationForm/>}/>
                         <Route path="login" element={<Login/>}/>
                         <Route path="signup" element={<SignUp />} />
+                        <Route path="dashboard" element={<Dashboard />} />
+                        {/*<Route path="users" element={<User}*/}
                         <Route path="tasks" element={<Tasks />}/>
                         <Route path="*" element={<NoPage/>}/>
                     </Route>

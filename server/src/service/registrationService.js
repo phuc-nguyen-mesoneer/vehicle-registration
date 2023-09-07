@@ -1,5 +1,8 @@
+import { ObjectId } from 'mongodb';
 import db from '../conn.js';
 import {provinces} from './provinceCode.js';
+
+const licensePlateCollection = db.collection('licensePlates');
 
 export const generatePlateService = async (userData) => {
     const {
@@ -15,7 +18,7 @@ export const generatePlateService = async (userData) => {
         phoneNumber,
         gender
     } = userData;
-    const existingDocument = await db.collection('licensePlates').findOne({
+    const existingDocument = await licensePlateCollection.findOne({
         firstName,
         lastName,
         dateOfBirth,
@@ -23,7 +26,7 @@ export const generatePlateService = async (userData) => {
         idNumber,
         brand,
         model,
-        province,
+        province
     });
     if (!existingDocument) {
         let isPlateDuplicated = false;
@@ -38,14 +41,14 @@ export const generatePlateService = async (userData) => {
                 randomIdentificationNumber = ("000" + randomIdentificationNumber).slice(-4);
             }
             generatedPlate = `${provinceCode}${randomLetter}${randomSingleNumber}-${randomIdentificationNumber}`;
-            const isExistingPlate = await db.collection('licensePlates').findOne({plate: generatedPlate});
+            const isExistingPlate = await licensePlateCollection.findOne({plate: generatedPlate});
             if (isExistingPlate) {
                 isPlateDuplicated = true;
             } else {
                 isPlateDuplicated = false;
             }
         } while (isPlateDuplicated === true);
-        await db.collection('licensePlates').insertOne({
+        const insertResult = await licensePlateCollection.insertOne({
             firstName,
             lastName,
             dateOfBirth,
@@ -60,8 +63,73 @@ export const generatePlateService = async (userData) => {
             plate: generatedPlate,
             status: 'Awaiting confirmation'
         });
-        return generatedPlate;
+        return {
+            generatedLicensePlate: generatedPlate,
+            plateId: insertResult.insertedId
+        };
     } else {
-        return existingDocument.plate;
+        return {
+            plateId: existingDocument._id,
+            generatedLicensePlate: existingDocument.plate
+        };
+    }
+}
+
+export const submitPlateService = async ({plateId, generatedPlate}) => {
+    return await licensePlateCollection.updateOne(
+        {
+            _id: new ObjectId(plateId),
+            plate: generatedPlate
+        },
+        {
+            $set: { status: "Submitted" }
+        }
+    );
+}
+
+export const getTaskCount = async () => {
+    return await licensePlateCollection.countDocuments({
+        status: 'Submitted'
+    });
+}
+
+export const getTaskService = async (filterAndSortOption) => {
+    const {
+        page,
+        pageSize,
+        sortBy,
+        sortDirection,
+        keyword
+    } = filterAndSortOption;
+
+    const queries = {
+        status: "Submitted"
+    }
+    if (keyword) {
+        const keywordRegex = new RegExp(keyword, "i");
+        queries.$or = [
+            {firstName: keywordRegex},
+            {lastName: keywordRegex},
+            {email: keywordRegex},
+            {brand: keywordRegex},
+            {model: keywordRegex},
+            {province: keywordRegex},
+            {address: keywordRegex},
+        ]
+    }
+
+    const taskPromise = licensePlateCollection.find(queries);
+    const taskCount = await licensePlateCollection.countDocuments(queries);
+    if (sortBy) {
+        taskPromise.sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
+    }
+
+    if (page && pageSize) {
+        taskPromise.skip((Number(page) - 1)*Number(pageSize)).limit(Number(pageSize));
+    }
+
+    return {
+        taskList: await taskPromise.toArray(),
+        taskCount
     }
 }

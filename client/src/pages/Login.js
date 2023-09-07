@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {
     Container,
     Box,
@@ -16,6 +16,7 @@ import {selectLoginErrors} from '../selectors/errorSelectors';
 
 const Login = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [remember, setRemember] = useState(false);
     const errors = useSelector(selectLoginErrors);
     const emailError = errors.email;
@@ -31,7 +32,7 @@ const Login = () => {
             email: data.get('email'),
             password: data.get('password'),
             remember
-        }));
+        }, navigate));
     }
 
     return (

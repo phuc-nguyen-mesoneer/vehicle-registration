@@ -1,8 +1,7 @@
 import axios from "axios";
-import setAuthToken from "../utils/setAuthToken";
+import {setAuthToken, setInterceptor} from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import {
-    GET_ERRORS,
     LOGIN_SUCCESS,
     SET_LOGIN_ERRORS,
     SET_SIGNUP_ERRORS,
@@ -21,28 +20,29 @@ export const registerUser = (userData, navigate) => dispatch => {
                 return navigate("/login");
             }, 2000)
         }) // re-direct to login on successful register
-        .catch(err => {
-            return dispatch({
-                    type: SET_SIGNUP_ERRORS,
-                    payload: err.response.data
-                })
-            }
+        .catch(err =>
+            dispatch({
+                type: SET_SIGNUP_ERRORS,
+                payload: err.response.data
+            })
         );
 };
 // Login - get user token
-export const loginUser = userData => dispatch => {
+export const loginUser = (userData, navigate) => dispatch => {
     axios
         .post("/login", userData)
         .then(res => {
-            const { token } = res.data;
+            const {token} = res.data;
             if (userData.remember) {
                 Cookies.set('token', token);
             } else {
                 sessionStorage.setItem('token', token);
             }
             setAuthToken(token);
+            setInterceptor(dispatch, navigate);
             const decoded = jwt_decode(token);
             dispatch(setCurrentUser(decoded));
+            navigate('/dashboard');
         })
         .catch(err =>
             dispatch({
@@ -52,17 +52,19 @@ export const loginUser = userData => dispatch => {
         );
 };
 
-export const loadUserFromJWT = token => dispatch => {
-    const decoded = jwt_decode(token);
+export const loadUserFromJWT = (token, navigate) => dispatch => {
     axios
         .get("/verify", {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             }
         })
         .then(res => {
-            const {email, name} = res.data;
-            dispatch(setCurrentUser(decoded));
+            setAuthToken(token);
+            setInterceptor(dispatch, navigate);
+            dispatch(setCurrentUser({
+                ...res.data.user
+            }));
         })
         .catch(err => {
             Cookies.remove('token');
@@ -70,7 +72,8 @@ export const loadUserFromJWT = token => dispatch => {
             dispatch({
                 type: SET_LOGIN_ERRORS,
                 payload: err.response.data
-            })
+            });
+            navigate('/login');
         })
 }
 
@@ -88,12 +91,9 @@ export const setUserLoading = () => {
 };
 // Log user out
 export const logoutUser = (navigate) => dispatch => {
-    // Remove token from local storage
     Cookies.remove('token');
     sessionStorage.removeItem('token');
-    // Remove auth header for future requests
     setAuthToken(false);
-    // Set current user to empty object {} which will set isAuthenticated to false
     dispatch(setCurrentUser(null));
     navigate('/login');
 };

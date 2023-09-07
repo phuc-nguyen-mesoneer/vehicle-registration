@@ -19,12 +19,12 @@ import {
 
 import provinceList from '../utils/provinceCode.json';
 
-import {generateLicensePlate} from '../actions/registrationActions';
+import {generateLicensePlate, submitLicensePlate} from '../actions/registrationActions';
 import {selectRegistrationFormError} from '../selectors/errorSelectors';
 import {
     selectIsPlateLoading,
     selectIsPlateGenerated,
-    selectGeneratedLicensePlate
+    selectGeneratedLicensePlate, selectPlateId
 } from '../selectors/registrationSelectors';
 
 const RegistrationForm = () => {
@@ -49,6 +49,7 @@ const RegistrationForm = () => {
     const isReadOnly = isPlateLoading || isPlateGenerated;
 
     const generatedPlate = useSelector(selectGeneratedLicensePlate);
+    const plateId = useSelector(selectPlateId);
 
     const errors = useSelector(selectRegistrationFormError);
     const {
@@ -75,6 +76,7 @@ const RegistrationForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        dispatch(submitLicensePlate({plateId, generatedPlate}));
     }
 
     return (
@@ -297,7 +299,7 @@ const RegistrationForm = () => {
                         Generate
                     </Button>
                     <Button
-                        disabled={!isReadOnly}
+                        disabled={!isPlateGenerated || isPlateLoading}
                         type="submit"
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}

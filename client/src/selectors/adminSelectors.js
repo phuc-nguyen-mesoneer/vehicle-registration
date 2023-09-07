@@ -1,0 +1,10 @@
+export const selectUserListLoading = state => state.admin.userListLoading;
+export const selectUserList = state => state.admin.userList;
+export const selectUserCount = state => state.admin.userCount;
+export const selectUserFilterAndSortOption = state => state.admin.userFilterAndSortOption;
+export const selectTotalUserCount = state => state.admin.totalUserCount;
+export const selectTotalTaskCount = state => state.admin.totalTaskCount;
+export const selectTaskListLoading = state => state.admin.taskListLoading;
+export const selectTaskList = state => state.admin.taskList;
+export const selectTaskCount = state => state.admin.taskCount;
+export const selectTaskFilterAndSortOption = state => state.admin.taskFilterAndSortOption;

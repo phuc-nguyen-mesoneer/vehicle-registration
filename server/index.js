@@ -7,10 +7,15 @@ import passportConfig from './src/passport.js';
 import {
     signUpController,
     loginController,
-    verifyController
+    verifyToken,
+    getUserList,
+    updateUserRole
 } from './src/controller/userController.js';
 import {
-    generatePlateController,
+    generatePlate,
+    getSummaryData,
+    getTaskList,
+    submitPlate
 } from './src/controller/registrationController.js';
 
 const PORT = process.env.PORT || 3001;
@@ -32,8 +37,17 @@ app.post('/signup', signUpController);
 
 app.post('/login', loginController);
 
-app.get('/verify', passport.authenticate('jwt', {session: false}), verifyController);
+app.get('/verify', passport.authenticate('jwt', {session: false}, ), verifyToken);
 
-app.post('/generate-plate', generatePlateController);
+app.post('/generate-plate', generatePlate);
+app.post('/submit-plate', submitPlate);
+
+app.get('/summary', passport.authenticate('jwt', {session: false}), getSummaryData);
+
+app.post('/users', passport.authenticate('jwt', {session: false}), getUserList);
+
+app.post('/tasks', passport.authenticate('jwt', {session: false}), getTaskList);
+
+app.post('/user-role',  passport.authenticate('jwt', {session: false}), updateUserRole);
 
 app.listen(PORT, () => console.log(`Server up and running on port ${PORT}`));

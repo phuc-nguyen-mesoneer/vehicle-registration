@@ -6,9 +6,10 @@ import {
     validateLoginInput,
 } from '../validation.js';
 import {
-    getUserFromEmail,
-    signUpNewUser
+    getUserFromEmail, getUsers,
+    signUpNewUser, updateUser
 } from '../service/userService.js';
+import {getSubordinateRanks, rankChecking, ranks} from '../ranks.js';
 
 export const signUpController = async (req, res) => {
     const {email} = req.body;
@@ -20,7 +21,7 @@ export const signUpController = async (req, res) => {
     if (isValid) {
         const existingUser = await getUserFromEmail(email);
         if (existingUser) {
-            return res.status(400).json({email: "User have already existed"});
+            return res.status(400).json({email: "User has already existed"});
         }
 
         await signUpNewUser(req.body);
@@ -46,7 +47,8 @@ export const loginController = async (req, res) => {
                 const JWTPayload = {
                     id: existingUser._id,
                     name: existingUser.name,
-                    email: existingUser.email
+                    email: existingUser.email,
+                    role: existingUser.role,
                 }
                 jwt.sign(
                     JWTPayload,
@@ -72,17 +74,51 @@ export const loginController = async (req, res) => {
     }
 };
 
-export const verifyController = (req, res) => {
-    const {email, name} = req.user;
-    if (email && name) {
+export const verifyToken = (req, res) => {
+    const {_id, email, name, role} = req.user;
+    if (_id && email && name && role) {
         return res.status(200).json({
             success: true,
-            email,
-            name
+            user: {
+                _id,
+                email,
+                name,
+                role
+            }
         });
     } else {
         res.status(401).json({
             error: 'Invalid token'
         });
+    }
+}
+
+export const getUserList = async (req, res) => {
+    const isAuthorized = rankChecking(req, res);
+    if (isAuthorized) {
+        const subordinateRanks = getSubordinateRanks(req.user.role);
+        const {userList, userCount} = await getUsers(req.body, subordinateRanks);
+        return res.status(200).json({
+            userList,
+            userCount
+        })
+    }
+}
+
+export const updateUserRole = async (req, res) => {
+    const isAuthorized = rankChecking(req, res);
+    if (isAuthorized) {
+        const { role: adminRole } = req.user;
+        const { role: updatedRole } = req.body;
+        if (ranks[adminRole] < ranks[updatedRole]) {
+            res.status(400).json({
+                error: "You are not authorized to promote someone's rank to higher than yours"
+            })
+        } else {
+            const result = await updateUser(req.body);
+            res.status(200).json({
+                success: true
+            })
+        }
     }
 }

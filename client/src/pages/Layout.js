@@ -10,6 +10,12 @@ import {selectUser} from '../selectors/authSelectors';
 import {loadUserFromJWT, logoutUser} from '../actions/authActions';
 import {useEffect} from 'react';
 
+const loggedInPaths = ["/dashboard", "/tasks", "/users"];
+
+const LinkStyle = {
+    textDecoration: "none",
+}
+
 const Layout = () => {
 
     const navigate = useNavigate();
@@ -18,17 +24,16 @@ const Layout = () => {
 
     useEffect(() => {
         if (!user) {
-            console.log('User is not found');
             let jwt = Cookies.get('token');
             if (!jwt) {
                 jwt = sessionStorage.getItem('token');
             }
             if (jwt) {
-                dispatch(loadUserFromJWT(jwt));
+                dispatch(loadUserFromJWT(jwt, navigate));
             }
         } else {
-            if (window.location.pathname !== '/tasks') {
-                navigate('/tasks');
+            if (!loggedInPaths.includes(window.location.pathname)) {
+                navigate('/dashboard');
             }
         }
     }, [user]);
@@ -37,7 +42,6 @@ const Layout = () => {
         event.preventDefault();
         dispatch(logoutUser(navigate));
     }
-
 
     return (
         <>
@@ -58,18 +62,18 @@ const Layout = () => {
                     <Box display='flex' flexDirection='row'>
                         {
                             user ?
-                                <Link to="#" onClick={handleLogOut} >
+                                <Link to="#" onClick={handleLogOut} style={LinkStyle}>
                                     Log Out
                                 </Link>
                                 :
                                 <>
-                                    <Link to="/login" >
+                                    <Link to="/login" style={LinkStyle}>
                                         Log In
                                     </Link>
                                     <Box px={1}>
                                         /
                                     </Box>
-                                    <Link to="/signup">
+                                    <Link to="/signup" style={LinkStyle}>
                                         Sign Up
                                     </Link>
                                 </>

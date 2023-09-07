@@ -1,10 +1,11 @@
 import {
     SET_REGISTRATION_FORM_ERRORS,
     SET_REGISTRATION_FORM_GENERATED,
-    SET_REGISTRATION_FORM_LOADING
+    SET_REGISTRATION_FORM_LOADING, SET_REGISTRATION_FORM_SUBMITTED
 } from '../actions/types';
 
 const initialState = {
+    plateId: null,
     isPlateGenerated: false,
     isPlateLoading: false,
     generatedLicensePlate: "",
@@ -23,13 +24,18 @@ export default function (state=initialState, action) {
                 ...state,
                 isPlateLoading: false,
                 isPlateGenerated: true,
-                generatedLicensePlate: action.payload.generatedPlate,
+                ...action.payload
             }
 
         case SET_REGISTRATION_FORM_ERRORS:
             return {
                 ...state,
                 isPlateLoading: false,
+            }
+
+        case SET_REGISTRATION_FORM_SUBMITTED:
+            return {
+                ...initialState
             }
 
         default:
