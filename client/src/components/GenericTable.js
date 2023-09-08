@@ -45,81 +45,80 @@ const GenericTable = (
     const renderedRows = isSummary ? rows.slice(0, 3) : rows;
 
     return (
-        <TableContainer sx={{
-            borderTopLeftRadius: '20px',
-            borderTopRightRadius: '20px',
-            boxShadow: 1
-        }}>
-            <Table size="medium" sx={{whiteSpace: 'nowrap'}}>
-                <TableHead>
-                    <TableRow>
-                        {
-                            columns.map(column => (
-                                column.isSortable && !isSummary ?
-                                    <StyledTableCell
-                                        key={column.id}
-                                        sx={column.customHeaderStyle ? column.customHeaderStyle : {}}
-                                    >
-                                        <StyledTableSortLabel
-                                            active={sortBy === column.accessor}
-                                            direction={sortBy === column.accessor ? sortDirection : 'asc'}
-                                            onClick={onSortingOptionChange(column.accessor)}
+        <>
+            <TableContainer sx={{
+                borderTopLeftRadius: '5px',
+                borderTopRightRadius: '5px',
+                boxShadow: 1
+            }}>
+                <Table size="medium" sx={{whiteSpace: 'nowrap'}}>
+                    <TableHead>
+                        <TableRow>
+                            {
+                                columns.map(column => (
+                                    column.isSortable && !isSummary ?
+                                        <StyledTableCell
+                                            key={column.id}
+                                            sx={column.customHeaderStyle ? column.customHeaderStyle : {}}
+                                        >
+                                            <StyledTableSortLabel
+                                                active={sortBy === column.accessor}
+                                                direction={sortBy === column.accessor ? sortDirection : 'asc'}
+                                                onClick={onSortingOptionChange(column.accessor)}
+                                            >
+                                                {column.header}
+                                            </StyledTableSortLabel>
+                                        </StyledTableCell>
+                                        :
+                                        <StyledTableCell
+                                            key={column.id}
+                                            sx={column.customHeaderStyle ? column.customHeaderStyle : {}}
                                         >
                                             {column.header}
-                                        </StyledTableSortLabel>
-                                    </StyledTableCell>
-                                    :
-                                    <StyledTableCell
-                                        key={column.id}
-                                        sx={column.customHeaderStyle ? column.customHeaderStyle : {}}
-                                    >
-                                        {column.header}
-                                    </StyledTableCell>
+                                        </StyledTableCell>
 
+                                ))
+                            }
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            renderedRows.map(row => (
+                                <TableRow key={row._id}>
+                                    {
+                                        columns.map(column => (
+                                            <TableCell
+                                                key={column.id}
+                                                sx={column.customStyle ? column.customStyle : {}}
+                                            >
+                                                {
+                                                    column.accessor ?
+                                                        row[column.accessor]
+                                                        :
+                                                        column.customRenderer(row)
+                                                }
+                                            </TableCell>
+                                        ))
+                                    }
+                                </TableRow>
                             ))
                         }
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {
-                        renderedRows.map(row => (
-                            <TableRow key={row._id}>
-                                {
-                                    columns.map(column => (
-                                        <TableCell
-                                            key={column.id}
-                                            sx={column.customStyle ? column.customStyle : {}}
-                                        >
-                                            {
-                                                column.accessor ?
-                                                    row[column.accessor]
-                                                    :
-                                                    column.customRenderer(row)
-                                            }
-                                        </TableCell>
-                                    ))
-                                }
-                            </TableRow>
-                        ))
-                    }
-                </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        {
-                            !isSummary &&
-                            <TablePagination
-                                count={totalRowCounts}
-                                page={page - 1}
-                                rowsPerPage={pageSize}
-                                onPageChange={onPageChange}
-                                onRowsPerPageChange={onPageSizeChange}
-                                rowsPerPageOptions={[5, 10, 20, 50]}
-                            />
-                        }
-                    </TableRow>
-                </TableFooter>
-            </Table>
-        </TableContainer>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            {
+                !isSummary &&
+                <TablePagination
+                    component="div"
+                    count={totalRowCounts}
+                    page={page - 1}
+                    rowsPerPage={pageSize}
+                    onPageChange={onPageChange}
+                    onRowsPerPageChange={onPageSizeChange}
+                    rowsPerPageOptions={[5, 10, 20, 50]}
+                />
+            }
+        </>
     )
 }
 

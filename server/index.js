@@ -9,13 +9,14 @@ import {
     loginController,
     verifyToken,
     getUserList,
-    updateUserRole
+    updateUserRole,
+    deleteUser
 } from './src/controller/userController.js';
 import {
     generatePlate,
     getSummaryData,
     getTaskList,
-    submitPlate
+    submitPlate, updateTask
 } from './src/controller/registrationController.js';
 
 const PORT = process.env.PORT || 3001;
@@ -45,9 +46,11 @@ app.post('/submit-plate', submitPlate);
 app.get('/summary', passport.authenticate('jwt', {session: false}), getSummaryData);
 
 app.post('/users', passport.authenticate('jwt', {session: false}), getUserList);
+app.delete('/users', passport.authenticate('jwt', {session: false}), deleteUser);
 
 app.post('/tasks', passport.authenticate('jwt', {session: false}), getTaskList);
 
-app.post('/user-role',  passport.authenticate('jwt', {session: false}), updateUserRole);
+app.put('/user-role',  passport.authenticate('jwt', {session: false}), updateUserRole);
+app.put('/tasks',  passport.authenticate('jwt', {session: false}), updateTask);
 
 app.listen(PORT, () => console.log(`Server up and running on port ${PORT}`));

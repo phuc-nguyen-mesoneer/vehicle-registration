@@ -17,7 +17,7 @@ const initialState = {
         pageSize: 5,
         sortBy: '',
         sortDirection: 'asc',
-        searchKeyword: '',
+        keyword: '',
     },
 
     totalTaskCount: 0,
@@ -29,7 +29,7 @@ const initialState = {
         pageSize: 5,
         sortBy: '',
         sortDirection: 'asc',
-        searchKeyword: '',
+        keyword: '',
     }
 }
 

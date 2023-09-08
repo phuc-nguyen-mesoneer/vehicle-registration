@@ -1,18 +1,18 @@
 import moment from 'moment';
 
 import {
-    Box,
+    Box, IconButton,
     Tooltip
 } from '@mui/material';
 import {
     CancelOutlined,
-    CheckCircleOutlined,
+    CheckCircleOutlined, Delete,
     Female,
     Male,
     Transgender
 } from '@mui/icons-material';
 
-export default [
+export default (onApprove, onDecline, onDelete) => [
     {
         id: 0,
         header: 'Action',
@@ -24,11 +24,21 @@ export default [
                 justifyContent="space-between"
             >
                 <Tooltip title="Approve">
-                    <CheckCircleOutlined color="success"/>
+                    <IconButton color="success" onClick={onApprove(row)}>
+                        <CheckCircleOutlined />
+                    </IconButton>
                 </Tooltip>
                 <Box p={1}/>
                 <Tooltip title="Decline">
-                    <CancelOutlined color="error"/>
+                    <IconButton color="warning" onClick={onDecline(row)}>
+                        <CancelOutlined/>
+                    </IconButton>
+                </Tooltip>
+                <Box p={1}/>
+                <Tooltip title="Delete">
+                    <IconButton color="error" onClick={onDelete(row)}>
+                        <Delete/>
+                    </IconButton>
                 </Tooltip>
             </Box>
         ),
@@ -65,7 +75,7 @@ export default [
         accessor: 'idNumber',
         isSortable: true,
         customHeaderStyle: {textAlign: 'right'},
-        customStyle: {textAlign: 'right'},
+        customStyle: {textAlign: 'right'}
     },
     {
         id: 6,
@@ -97,7 +107,7 @@ export default [
         accessor: 'phoneNumber',
         isSortable: false,
         customHeaderStyle: {textAlign: 'right'},
-        customStyle: {textAlign: 'right'},
+        customStyle: {textAlign: 'right'}
     },
     {
         id: 11,
@@ -120,8 +130,8 @@ export default [
         id: 12,
         header: 'Plate Number',
         accessor: 'plate',
-        isSortable: true,
+        isSortable: false,
         customHeaderStyle: {textAlign: 'right'},
-        customStyle: {textAlign: 'right'},
+        customStyle: {textAlign: 'right'}
     }
 ]

@@ -1,24 +1,26 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectTaskFilterAndSortOption} from '../selectors/adminSelectors';
-import {getTaskList} from '../actions/adminActions';
 import {Box, Container, IconButton, InputAdornment, OutlinedInput} from '@mui/material';
 import {Search} from '@mui/icons-material';
-import TaskList from '../components/TaskList';
 
-const Tasks = () => {
+import UserList from '../components/UserList';
 
-    const dispatch = useDispatch();
+import {selectUserFilterAndSortOption} from '../selectors/adminSelectors';
+import {getUserList} from '../actions/adminActions';
+
+const Users = () => {
+
     const [searchKeyword, setSearchKeyword] = useState('');
+    const dispatch = useDispatch();
 
-    const filterAndSortOption = useSelector(selectTaskFilterAndSortOption);
+    const filterAndSortOption = useSelector(selectUserFilterAndSortOption);
 
     const onInputChange = (event) => {
         setSearchKeyword(event.target.value);
     }
 
     const handleSearch = () => {
-        dispatch(getTaskList({
+        dispatch(getUserList({
             ...filterAndSortOption,
             keyword: searchKeyword
         }))
@@ -49,10 +51,10 @@ const Tasks = () => {
                         }
                     />
                 </Box>
-                <TaskList/>
+                <UserList/>
             </Box>
         </Container>
     )
 }
 
-export default Tasks;
+export default Users;

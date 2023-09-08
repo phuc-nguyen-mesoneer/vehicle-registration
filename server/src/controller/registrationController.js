@@ -3,7 +3,7 @@ import {
     generatePlateService,
     getTaskCount,
     getTaskService,
-    submitPlateService
+    updateTaskService
 } from '../service/registrationService.js';
 import {getSubordinateRanks, rankChecking} from '../ranks.js';
 import {countUsers} from '../service/userService.js';
@@ -23,7 +23,11 @@ export const generatePlate = async (req, res) => {
 
 export const submitPlate = async (req, res) => {
     try {
-        const updateResult = await submitPlateService(req.body);
+        await updateTaskService({
+            _id: req.body.plateId,
+            plate: req.body.generatedPlate,
+            status: "Submitted",
+        });
         return res.status(200).json({
             success: true
         })
@@ -60,5 +64,23 @@ export const getTaskList = async (req, res) => {
             })
         }
 
+    }
+}
+
+export const updateTask = async (req, res) => {
+    const isAuthorized = rankChecking(req, res);
+    if (isAuthorized) {
+        try {
+            await updateTaskService({
+                ...req.body
+            })
+            return res.status(200).json({
+                success: true,
+            })
+        } catch (err) {
+            return res.status(500).json({
+                internalError: err
+            })
+        }
     }
 }

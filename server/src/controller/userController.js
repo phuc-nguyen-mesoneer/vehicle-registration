@@ -3,9 +3,10 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {
     validateSignUpInput,
-    validateLoginInput,
+    validateLoginInput
 } from '../validation.js';
 import {
+    deleteUserService,
     getUserFromEmail, getUsers,
     signUpNewUser, updateUser
 } from '../service/userService.js';
@@ -13,7 +14,7 @@ import {getSubordinateRanks, rankChecking, ranks} from '../ranks.js';
 
 export const signUpController = async (req, res) => {
     const {email} = req.body;
-    const { errors, isValid } = validateSignUpInput(req.body);
+    const {errors, isValid} = validateSignUpInput(req.body);
     if (!isEmpty(errors)) {
         return res.status(400).json(errors);
     }
@@ -30,8 +31,8 @@ export const signUpController = async (req, res) => {
 };
 
 export const loginController = async (req, res) => {
-    const { email, password } = req.body;
-    const { errors, isValid } = validateLoginInput(req.body);
+    const {email, password} = req.body;
+    const {errors, isValid} = validateLoginInput(req.body);
     if (!isEmpty(errors)) {
         return res.status(400).json(errors);
     }
@@ -48,7 +49,7 @@ export const loginController = async (req, res) => {
                     id: existingUser._id,
                     name: existingUser.name,
                     email: existingUser.email,
-                    role: existingUser.role,
+                    role: existingUser.role
                 }
                 jwt.sign(
                     JWTPayload,
@@ -61,13 +62,13 @@ export const loginController = async (req, res) => {
                         } else {
                             return res.status(200).json({
                                 success: true,
-                                token: token,
+                                token: token
                             })
                         }
                     });
             } else {
                 return res.status(401).json({
-                    password: 'Password does not match',
+                    password: 'Password does not match'
                 })
             }
         }
@@ -106,19 +107,50 @@ export const getUserList = async (req, res) => {
 }
 
 export const updateUserRole = async (req, res) => {
-    const isAuthorized = rankChecking(req, res);
-    if (isAuthorized) {
-        const { role: adminRole } = req.user;
-        const { role: updatedRole } = req.body;
-        if (ranks[adminRole] < ranks[updatedRole]) {
-            res.status(400).json({
-                error: "You are not authorized to promote someone's rank to higher than yours"
-            })
-        } else {
-            const result = await updateUser(req.body);
-            res.status(200).json({
-                success: true
-            })
+    try {
+        const isAuthorized = rankChecking(req, res);
+        if (isAuthorized) {
+            const {role: adminRole} = req.user;
+            const {role: updatedRole} = req.body;
+            if (ranks[adminRole] < ranks[updatedRole]) {
+                res.status(400).json({
+                    error: "You are not authorized to promote someone's rank to higher than yours"
+                })
+            } else {
+                await updateUser(req.body);
+                res.status(200).json({
+                    success: true
+                })
+            }
         }
+    } catch (err) {
+        res.status(500).json({
+            internalError: err
+        })
     }
+}
+
+export const deleteUser = async (req, res) => {
+    try {
+        const isAuthorized = rankChecking(req, res);
+        if (isAuthorized) {
+            const {role: adminRole} = req.user;
+            const {role: updatedRole} = req.body;
+            if (ranks[adminRole] <= ranks[updatedRole]) {
+                res.status(400).json({
+                    error: "You are not authorized to delete your colleague someone with higher rank than yours"
+                })
+            } else {
+                await deleteUserService(req.body);
+                res.status(200).json({
+                    success: true,
+                })
+            }
+        }
+    } catch (err) {
+        res.status(500).json({
+            internalError: err
+        })
+    }
+
 }

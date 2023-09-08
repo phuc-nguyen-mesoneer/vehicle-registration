@@ -75,18 +75,6 @@ export const generatePlateService = async (userData) => {
     }
 }
 
-export const submitPlateService = async ({plateId, generatedPlate}) => {
-    return await licensePlateCollection.updateOne(
-        {
-            _id: new ObjectId(plateId),
-            plate: generatedPlate
-        },
-        {
-            $set: { status: "Submitted" }
-        }
-    );
-}
-
 export const getTaskCount = async () => {
     return await licensePlateCollection.countDocuments({
         status: 'Submitted'
@@ -132,4 +120,23 @@ export const getTaskService = async (filterAndSortOption) => {
         taskList: await taskPromise.toArray(),
         taskCount
     }
+}
+
+export const updateTaskService  = async (taskData) => {
+    const {
+        _id,
+        plate,
+        status
+    } = taskData;
+    return await licensePlateCollection.updateOne(
+        {
+            _id: new ObjectId(_id),
+            plate: plate
+        },
+        {
+            $set: {
+                status: status,
+            }
+        }
+    )
 }

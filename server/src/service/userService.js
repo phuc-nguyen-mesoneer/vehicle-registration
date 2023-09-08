@@ -81,3 +81,12 @@ export const updateUser = async (userData) => {
         }
     );
 }
+
+export const deleteUserService = async (userData) => {
+    return await userCollection.deleteOne(
+        {
+            _id: new ObjectId(userData._id),
+            email: userData.email,
+        }
+    );
+}

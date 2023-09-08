@@ -14,13 +14,13 @@ export const getSummaryData = () => dispatch => {
         .then(res => {
             dispatch({
                 type: SET_SUMMARY_DATA,
-                payload: res.data,
+                payload: res.data
             })
         })
         .catch(err => {
             dispatch(showNotifications({
                 color: 'error',
-                message: 'Failed to get summary data',
+                message: 'Failed to get summary data'
             }))
         })
 }
@@ -73,7 +73,7 @@ export const getTaskList = (filterAndSortOption) => dispatch => {
 
 export const setUserRole = (userData, callback) => dispatch => {
     axios
-        .post('/user-role', userData)
+        .put('/user-role', userData)
         .then(res => {
             callback();
         })
@@ -81,4 +81,26 @@ export const setUserRole = (userData, callback) => dispatch => {
             console.error(err);
         })
 
+}
+
+export const deleteUser = (userData, callback) => dispatch => {
+    axios
+        .delete('/users', {data: userData})
+        .then(res => {
+                callback();
+        })
+        .catch(err => {
+            console.error(err);
+        })
+}
+
+export const updateTaskStatus = (task, callback) => dispatch => {
+    axios
+        .put('/tasks', task)
+        .then(res => {
+            callback();
+        })
+        .catch(err => {{
+            console.error(err);
+        }})
 }
