@@ -46,31 +46,39 @@ export default (onApprove, onDecline, onDelete) => [
     },
     {
         id: 1,
+        header: 'Plate Number',
+        accessor: 'plate',
+        isSortable: false,
+        customHeaderStyle: {textAlign: 'right'},
+        customStyle: {textAlign: 'right'}
+    },
+    {
+        id: 2,
         header: 'First Name',
         accessor: 'firstName',
         isSortable: true
     },
     {
-        id: 2,
+        id: 3,
         header: 'Last Name',
         accessor: 'lastName',
         isSortable: true
     },
     {
-        id: 3,
+        id: 4,
         header: 'Birthday',
         customHeaderStyle: {textAlign: 'center'},
         customRenderer: (row) => moment(row.dateOfBirth).format('MMM DD YYYY'),
         isSortable: true
     },
     {
-        id: 4,
+        id: 5,
         header: 'Email',
         accessor: 'email',
         isSortable: true
     },
     {
-        id: 5,
+        id: 6,
         header: 'ID number',
         accessor: 'idNumber',
         isSortable: true,
@@ -78,31 +86,31 @@ export default (onApprove, onDecline, onDelete) => [
         customStyle: {textAlign: 'right'}
     },
     {
-        id: 6,
+        id: 7,
         header: 'Brand',
         accessor: 'brand',
         isSortable: true
     },
     {
-        id: 7,
+        id: 8,
         header: 'Model',
         accessor: 'model',
         isSortable: true
     },
     {
-        id: 8,
+        id: 9,
         header: 'Province',
         accessor: 'province',
         isSortable: true
     },
     {
-        id: 9,
+        id: 10,
         header: 'Address',
         accessor: 'address',
         isSortable: false
     },
     {
-        id: 10,
+        id: 11,
         header: 'Phone Number',
         accessor: 'phoneNumber',
         isSortable: false,
@@ -110,7 +118,7 @@ export default (onApprove, onDecline, onDelete) => [
         customStyle: {textAlign: 'right'}
     },
     {
-        id: 11,
+        id: 12,
         header: 'Gender',
         customRenderer: row => {
             switch (row.gender) {
@@ -125,13 +133,5 @@ export default (onApprove, onDecline, onDelete) => [
         customHeaderStyle: {textAlign: 'center'},
         customStyle: {textAlign: 'center'},
         isSortable: false
-    },
-    {
-        id: 12,
-        header: 'Plate Number',
-        accessor: 'plate',
-        isSortable: false,
-        customHeaderStyle: {textAlign: 'right'},
-        customStyle: {textAlign: 'right'}
     }
 ]

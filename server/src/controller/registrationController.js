@@ -1,5 +1,6 @@
 import {validatePlateGenerationInput} from '../validation.js';
 import {
+    deleteTaskService,
     generatePlateService,
     getTaskCount,
     getTaskService,
@@ -73,7 +74,23 @@ export const updateTask = async (req, res) => {
         try {
             await updateTaskService({
                 ...req.body
+            });
+            return res.status(200).json({
+                success: true,
             })
+        } catch (err) {
+            return res.status(500).json({
+                internalError: err
+            })
+        }
+    }
+}
+
+export const deleteTask = async (req, res) => {
+    const isAuthorized = rankChecking(req, res);
+    if (isAuthorized) {
+        try {
+            await deleteTaskService(req.body);
             return res.status(200).json({
                 success: true,
             })

@@ -138,7 +138,7 @@ export const deleteUser = async (req, res) => {
             const {role: updatedRole} = req.body;
             if (ranks[adminRole] <= ranks[updatedRole]) {
                 res.status(400).json({
-                    error: "You are not authorized to delete your colleague someone with higher rank than yours"
+                    error: "You are not authorized to delete your colleague or someone with higher rank than yours"
                 })
             } else {
                 await deleteUserService(req.body);

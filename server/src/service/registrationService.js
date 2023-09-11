@@ -140,3 +140,9 @@ export const updateTaskService  = async (taskData) => {
         }
     )
 }
+
+export const deleteTaskService = async (taskData) => {
+    return await licensePlateCollection.deleteOne({
+        _id: new ObjectId(taskData._id)
+    });
+}

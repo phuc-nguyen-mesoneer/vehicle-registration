@@ -73,7 +73,7 @@ export const getTaskList = (filterAndSortOption) => dispatch => {
 
 export const setUserRole = (userData, callback) => dispatch => {
     axios
-        .put('/user-role', userData)
+        .put('/users', userData)
         .then(res => {
             callback();
         })
@@ -100,7 +100,18 @@ export const updateTaskStatus = (task, callback) => dispatch => {
         .then(res => {
             callback();
         })
-        .catch(err => {{
+        .catch(err =>
+            console.error(err)
+        )
+}
+
+export const deleteTask = (task, callback) => dispatch => {
+    axios
+        .delete('/tasks', {data: task})
+        .then(res => {
+            callback()
+        })
+        .catch(err => {
             console.error(err);
-        }})
+        })
 }

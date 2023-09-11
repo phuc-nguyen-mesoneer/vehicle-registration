@@ -10,7 +10,7 @@ import {
 } from '../selectors/adminSelectors';
 import {useEffect, useState} from 'react';
 import {selectUser} from '../selectors/authSelectors';
-import {getSummaryData, getTaskList, updateTaskStatus} from '../actions/adminActions';
+import {deleteTask, getSummaryData, getTaskList, updateTaskStatus} from '../actions/adminActions';
 import ConfirmDialog from './ConfirmDialog';
 
 const TaskList = ({isSummary}) => {
@@ -87,23 +87,33 @@ const TaskList = ({isSummary}) => {
                 status: 'Approved'
             },
             () => {
-                getTaskList(filterAndSortOption);
-                getSummaryData();
+                dispatch(getTaskList(filterAndSortOption));
+                dispatch(getSummaryData());
             }
-        ))
+        ));
+        handleCloseDialog();
     }
 
     const handleDecline = (task) => () => {
         dispatch(updateTaskStatus(
             {
                 ...task,
-                status: 'Declined',
+                status: 'Declined'
             },
             () => {
-                getTaskList(filterAndSortOption);
-                getSummaryData();
+                dispatch(getTaskList(filterAndSortOption));
+                dispatch(getSummaryData());
             }
-        ))
+        ));
+        handleCloseDialog();
+    }
+
+    const handleDelete = (task) => () => {
+        dispatch(deleteTask(task, () => {
+            dispatch(getTaskList(filterAndSortOption));
+            dispatch(getSummaryData());
+        }));
+        handleCloseDialog();
     }
 
     const onApproveClick = (currentTask) => () => {
@@ -131,8 +141,7 @@ const TaskList = ({isSummary}) => {
             title: 'Are you sure you want to delete this submission?',
             content: 'Terminated submission will disappear forever. Don\'t worry,' +
                 ' you can still make them submit another request.',
-            onConfirm: (currentTask) => () => {
-            }
+            onConfirm: handleDelete(currentTask)
         })
     }
 
