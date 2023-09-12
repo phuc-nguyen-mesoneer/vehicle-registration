@@ -81,13 +81,13 @@ const Login = () => {
                 </Button>
                 <Grid container>
                     <Grid item xs>
-                        <Link to={'/password-reset'} variant="body2">
+                        <Link to={'/forgot'} variant="body2">
                             Forgot password?
                         </Link>
                     </Grid>
                     <Grid item>
                         <Link to='/signup' variant="body2">
-                            {"Don't have an account? Sign Up"}
+                            Don't have an account? Sign Up
                         </Link>
                     </Grid>
                 </Grid>

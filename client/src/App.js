@@ -9,6 +9,7 @@ import SignUp from './pages/SignUp';
 import Tasks from './pages/Tasks';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
+import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                         <Route index element={<RegistrationForm/>}/>
                         <Route path="login" element={<Login/>}/>
                         <Route path="signup" element={<SignUp />} />
+                        <Route path="forgot" element={<ForgotPassword />}/>
                         <Route path="dashboard" element={<Dashboard />} />
                         <Route path="users" element={<Users />} />
                         <Route path="tasks" element={<Tasks />}/>

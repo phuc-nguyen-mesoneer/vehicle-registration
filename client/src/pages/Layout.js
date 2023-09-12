@@ -30,6 +30,10 @@ const Layout = () => {
             }
             if (jwt) {
                 dispatch(loadUserFromJWT(jwt, navigate));
+            } else {
+                if (loggedInPaths.includes(window.location.pathname)) {
+                    window.location.pathname = '/';
+                }
             }
         } else {
             if (!loggedInPaths.includes(window.location.pathname)) {
