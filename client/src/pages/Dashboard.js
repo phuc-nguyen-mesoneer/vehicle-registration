@@ -36,16 +36,16 @@ const Dashboard = () => {
                     <>
                         <Box mt={4} py={2} boxShadow={2} borderRadius={4}>
                             <Box mx={2} my={2}>
+                                You have {totalTaskCount} <Link to="/tasks">tasks</Link>. Take your time!
+                            </Box>
+                            <TaskList isSummary={true}/>
+                        </Box>
+                        <Box mt={4} py={2} boxShadow={2} borderRadius={4}>
+                            <Box mx={2} my={2}>
                                 You have {totalUserCount} <Link to="/users">subordinates</Link>.
                                 Make sure to keep them in check!
                             </Box>
                             <UserList isSummary={true}/>
-                        </Box>
-                        <Box mt={4} py={2} boxShadow={2} borderRadius={4}>
-                            <Box mx={2} my={2}>
-                                You have {totalTaskCount} <Link to="/tasks">tasks</Link>. Take your time!
-                            </Box>
-                            <TaskList isSummary={true}/>
                         </Box>
                     </>
                     :
