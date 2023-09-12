@@ -1,19 +1,25 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Box, Container, IconButton, InputAdornment, OutlinedInput} from '@mui/material';
-import {Search} from '@mui/icons-material';
+import {Box, Button, Container, IconButton, InputAdornment, OutlinedInput} from '@mui/material';
+import {ArrowBack, Search} from '@mui/icons-material';
 
 import UserList from '../components/UserList';
 
 import {selectUserFilterAndSortOption} from '../selectors/adminSelectors';
 import {getUserList} from '../actions/adminActions';
+import {useNavigate} from 'react-router-dom';
 
 const Users = () => {
 
+    const navigate = useNavigate();
     const [searchKeyword, setSearchKeyword] = useState('');
     const dispatch = useDispatch();
 
     const filterAndSortOption = useSelector(selectUserFilterAndSortOption);
+
+    const handleGoBack = () => {
+        navigate(-1);
+    }
 
     const onInputChange = (event) => {
         setSearchKeyword(event.target.value);
@@ -22,7 +28,8 @@ const Users = () => {
     const handleSearch = () => {
         dispatch(getUserList({
             ...filterAndSortOption,
-            keyword: searchKeyword
+            keyword: searchKeyword,
+            page: 1
         }))
     }
 
@@ -35,6 +42,21 @@ const Users = () => {
     return (
         <Container maxWidth="md">
             <Box mt={4} py={2} boxShadow={2} borderRadius={4}>
+                <Box>
+                    <Button
+                        onClick={handleGoBack}
+                        color="primary"
+                        startIcon={<ArrowBack/>}
+                        sx={{
+                            ml: 1,
+                            "&.MuiButtonBase-root:hover": {
+                                bgcolor: "transparent"
+                            }
+                        }}
+                    >
+                        Back to Dashboard
+                    </Button>
+                </Box>
                 <Box p={3}>
                     <OutlinedInput
                         fullWidth
