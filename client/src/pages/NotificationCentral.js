@@ -9,7 +9,7 @@ const NotificationCentral = () => {
 
     return (
         <Snackbar open={isOpen} anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-            <Alert severity={color}>
+            <Alert severity={color} aria-label={message}>
                 {message}
             </Alert>
         </Snackbar>

@@ -1,5 +1,5 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import db from './conn.js';
+import connection from './conn.js';
 
 const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -10,7 +10,7 @@ export default passport => {
     passport.use(
         new Strategy(opts, async (jwt_payload, done) => {
             try {
-                const user = await db.collection('popoUsers').findOne({email: jwt_payload.email});
+                const user = await connection.db('local').collection('popoUsers').findOne({email: jwt_payload.email});
                 if (user) {
                     return done(null, user);
                 } else {

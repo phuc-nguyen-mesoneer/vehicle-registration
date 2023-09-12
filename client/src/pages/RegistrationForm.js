@@ -41,7 +41,7 @@ const RegistrationForm = () => {
        province: '',
        address: '',
        phoneNumber: '',
-       gender: ''
+       gender: 'non-binary'
     });
 
     const isPlateLoading = useSelector(selectIsPlateLoading);
@@ -101,7 +101,10 @@ const RegistrationForm = () => {
                     name="firstName"
                     autoFocus
                     InputProps={{
-                        readOnly: isReadOnly
+                        readOnly: isReadOnly,
+                    }}
+                    inputProps={{
+                        'aria-label': 'firstName',
                     }}
                     error={!!firstNameError}
                     helperText={firstNameError}
@@ -118,6 +121,9 @@ const RegistrationForm = () => {
                     autoFocus
                     InputProps={{
                         readOnly: isReadOnly
+                    }}
+                    inputProps={{
+                        'aria-label': 'lastName',
                     }}
                     error={!!lastNameError}
                     helperText={lastNameError}
@@ -137,6 +143,9 @@ const RegistrationForm = () => {
                     InputProps={{
                         readOnly: isReadOnly
                     }}
+                    inputProps={{
+                        'aria-label': 'dateOfBirth',
+                    }}
                     error={!!dateOfBirthError}
                     helperText={dateOfBirthError}
                 />
@@ -152,6 +161,9 @@ const RegistrationForm = () => {
                     autoFocus
                     InputProps={{
                         readOnly: isReadOnly
+                    }}
+                    inputProps={{
+                        'aria-label': 'email',
                     }}
                     error={!!emailError}
                     helperText={emailError}
@@ -169,6 +181,9 @@ const RegistrationForm = () => {
                     InputProps={{
                         readOnly: isReadOnly
                     }}
+                    inputProps={{
+                        'aria-label': 'idNumber',
+                    }}
                     error={!!idNumberError}
                     helperText={idNumberError}
                 />
@@ -184,6 +199,9 @@ const RegistrationForm = () => {
                     autoFocus
                     InputProps={{
                         readOnly: isReadOnly
+                    }}
+                    inputProps={{
+                        'aria-label': 'brand',
                     }}
                     error={!!brandError}
                     helperText={brandError}
@@ -201,6 +219,9 @@ const RegistrationForm = () => {
                     InputProps={{
                         readOnly: isReadOnly
                     }}
+                    inputProps={{
+                        'aria-label': 'model',
+                    }}
                     error={!!modelError}
                     helperText={modelError}
                 />
@@ -215,7 +236,9 @@ const RegistrationForm = () => {
                         value={formData.province}
                         disabled={isReadOnly}
                         error={!!provinceError}
-
+                        inputProps={{
+                            'aria-label': 'province',
+                        }}
                     >
                         {
                             Object.keys(provinceList).sort().map(province =>
@@ -240,6 +263,9 @@ const RegistrationForm = () => {
                     InputProps={{
                         readOnly: isReadOnly
                     }}
+                    inputProps={{
+                        'aria-label': 'address',
+                    }}
                 />
                 <TextField
                     margin="normal"
@@ -254,13 +280,16 @@ const RegistrationForm = () => {
                     InputProps={{
                         readOnly: isReadOnly
                     }}
+                    inputProps={{
+                        'aria-label': 'phoneNumber',
+                    }}
                 />
                 <FormControl disabled={isReadOnly}>
                     <FormLabel id="gender-label">Gender</FormLabel>
                     <RadioGroup
                         row
                         aria-labelledby="gender-label"
-                        defaultValue="female"
+                        defaultValue="non-binary"
                         name="gender"
                         onChange={handleChangeFormData}
                         value={formData.gender}
@@ -275,6 +304,7 @@ const RegistrationForm = () => {
                     fullWidth
                     value={generatedPlate || ''}
                     inputProps={{
+                        "aria-label": "generated-plate",
                         style: {
                             textAlign: 'center',
                         }
@@ -290,7 +320,6 @@ const RegistrationForm = () => {
                 />
                 <Box display="flex" flexDirection="row" justifyContent="space-between">
                     <Button
-                        type="submit"
                         disabled={isReadOnly}
                         onClick={handleGenerate}
                         variant="outlined"

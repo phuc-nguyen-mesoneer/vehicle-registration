@@ -1,14 +1,14 @@
 import isEmpty from 'is-empty';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import {
     validateSignUpInput,
     validateLoginInput
 } from '../validation.js';
 import {
     deleteUserService,
-    getUserFromEmail, getUsers,
-    signUpNewUser, updateUser
+    getUserFromEmail,
+    getUsers, signInUser,
+    signUpNewUser,
+    updateUser
 } from '../service/userService.js';
 import {getSubordinateRanks, rankChecking, ranks} from '../ranks.js';
 
@@ -31,46 +31,17 @@ export const signUpController = async (req, res) => {
 };
 
 export const loginController = async (req, res) => {
-    const {email, password} = req.body;
     const {errors, isValid} = validateLoginInput(req.body);
     if (!isEmpty(errors)) {
         return res.status(400).json(errors);
     }
 
     if (isValid) {
-        const existingUser = await getUserFromEmail(email);
-        if (!existingUser) {
-            return res.status(401).json({email: "Cannot find user with given email"});
+        const logInResult = await signInUser(req.body);
+        if (logInResult.success) {
+            return res.status(200).json(logInResult);
         } else {
-            const hashedPassword = existingUser.password;
-            const isPasswordMatched = await bcrypt.compare(password, hashedPassword);
-            if (isPasswordMatched) {
-                const JWTPayload = {
-                    id: existingUser._id,
-                    name: existingUser.name,
-                    email: existingUser.email,
-                    role: existingUser.role
-                }
-                jwt.sign(
-                    JWTPayload,
-                    process.env.JWTSecret,
-                    {expiresIn: 31556926},
-                    (err, token) => {
-                        if (err) {
-                            console.error(err);
-                            return res.status(500).json({internalError: err});
-                        } else {
-                            return res.status(200).json({
-                                success: true,
-                                token: token
-                            })
-                        }
-                    });
-            } else {
-                return res.status(401).json({
-                    password: 'Password does not match'
-                })
-            }
+            return res.status(400).json(logInResult);
         }
     }
 };

@@ -2,7 +2,9 @@ import axios from 'axios';
 import {
     GET_TASKS_ERROR,
     GET_USERS_ERROR,
-    SET_SUMMARY_DATA, SET_TASKS, SET_TASKS_LOADING,
+    SET_SUMMARY_DATA,
+    SET_TASKS,
+    SET_TASKS_LOADING,
     SET_USERS,
     SET_USERS_LOADING
 } from './types';
@@ -17,7 +19,7 @@ export const getSummaryData = () => dispatch => {
                 payload: res.data
             })
         })
-        .catch(err => {
+        .catch(() => {
             dispatch(showNotifications({
                 color: 'error',
                 message: 'Failed to get summary data'
@@ -71,10 +73,10 @@ export const getTaskList = (filterAndSortOption) => dispatch => {
         })
 }
 
-export const setUserRole = (userData, callback) => dispatch => {
+export const setUserRole = (userData, callback) => () => {
     axios
         .put('/users', userData)
-        .then(res => {
+        .then(() => {
             callback();
         })
         .catch(err => {
@@ -83,10 +85,10 @@ export const setUserRole = (userData, callback) => dispatch => {
 
 }
 
-export const deleteUser = (userData, callback) => dispatch => {
+export const deleteUser = (userData, callback) => () => {
     axios
         .delete('/users', {data: userData})
-        .then(res => {
+        .then(() => {
                 callback();
         })
         .catch(err => {
@@ -94,10 +96,10 @@ export const deleteUser = (userData, callback) => dispatch => {
         })
 }
 
-export const updateTaskStatus = (task, callback) => dispatch => {
+export const updateTaskStatus = (task, callback) => () => {
     axios
         .put('/tasks', task)
-        .then(res => {
+        .then(() => {
             callback();
         })
         .catch(err =>
@@ -105,10 +107,10 @@ export const updateTaskStatus = (task, callback) => dispatch => {
         )
 }
 
-export const deleteTask = (task, callback) => dispatch => {
+export const deleteTask = (task, callback) => () => {
     axios
         .delete('/tasks', {data: task})
-        .then(res => {
+        .then(() => {
             callback()
         })
         .catch(err => {

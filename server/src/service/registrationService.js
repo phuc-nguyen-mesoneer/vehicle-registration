@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb';
-import db from '../conn.js';
+import connection from '../conn.js';
 import {provinces} from './provinceCode.js';
 
-const licensePlateCollection = db.collection('licensePlates');
+const licensePlateCollection = connection.db('local').collection('licensePlates');
 
 export const generatePlateService = async (userData) => {
     const {
