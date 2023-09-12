@@ -1,0 +1,10 @@
+{
+  "name": "vehicle-registration",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "npm run --prefix client start & npm run --prefix server start"
+  },
+  "author": "",
+  "license": "ISC"
+}
