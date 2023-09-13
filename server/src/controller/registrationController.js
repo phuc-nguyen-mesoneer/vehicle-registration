@@ -77,7 +77,7 @@ export const updateTask = async (req, res) => {
             });
             return res.status(200).json({
                 success: true,
-            })
+            });
         } catch (err) {
             return res.status(500).json({
                 internalError: err

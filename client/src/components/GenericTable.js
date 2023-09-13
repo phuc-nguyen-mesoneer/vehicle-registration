@@ -8,9 +8,9 @@ import {
     TableCell,
     TableSortLabel,
     TablePagination,
-    TableFooter,
     tableCellClasses,
-    tableSortLabelClasses
+    tableSortLabelClasses,
+    Typography,
 } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
@@ -83,25 +83,35 @@ const GenericTable = (
                     </TableHead>
                     <TableBody>
                         {
-                            renderedRows.map(row => (
-                                <TableRow key={row._id}>
-                                    {
-                                        columns.map(column => (
-                                            <TableCell
-                                                key={column.id}
-                                                sx={column.customStyle ? column.customStyle : {}}
-                                            >
-                                                {
-                                                    column.accessor ?
-                                                        row[column.accessor]
-                                                        :
-                                                        column.customRenderer(row)
-                                                }
-                                            </TableCell>
-                                        ))
-                                    }
+                            renderedRows.length > 0 ? renderedRows.map(
+                                row => (
+                                    <TableRow key={row._id}>
+                                        {
+                                            columns.map(column => (
+                                                <TableCell
+                                                    key={column.id}
+                                                    sx={column.customStyle ? column.customStyle : {}}
+                                                >
+                                                    {
+                                                        column.accessor ?
+                                                            row[column.accessor]
+                                                            :
+                                                            column.customRenderer(row)
+                                                    }
+                                                </TableCell>
+                                            ))
+                                        }
+                                    </TableRow>
+                                ))
+                                :
+                                <TableRow>
+                                    <TableCell>
+                                        <Typography color="text.secondary">
+                                            Table has no data
+                                        </Typography>
+                                    </TableCell>
                                 </TableRow>
-                            ))
+
                         }
                     </TableBody>
                 </Table>

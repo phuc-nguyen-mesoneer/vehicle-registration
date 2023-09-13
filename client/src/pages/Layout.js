@@ -1,19 +1,24 @@
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {Link, Outlet, useNavigate} from 'react-router-dom';
 import Cookies from 'js-cookie';
+
 import {
     AppBar,
-    Box
+    Box, Typography
 } from '@mui/material';
+
+import AppLogo from './logo.png';
 import NotificationCentral from './NotificationCentral';
-import {useDispatch, useSelector} from 'react-redux';
 import {selectUser} from '../selectors/authSelectors';
 import {loadUserFromJWT, logoutUser} from '../actions/authActions';
-import {useEffect} from 'react';
+
 
 const loggedInPaths = ["/dashboard", "/tasks", "/users"];
 
 const LinkStyle = {
     textDecoration: "none",
+    color: "white",
 }
 
 const Layout = () => {
@@ -32,7 +37,7 @@ const Layout = () => {
                 dispatch(loadUserFromJWT(jwt, navigate));
             } else {
                 if (loggedInPaths.includes(window.location.pathname)) {
-                    window.location.pathname = '/';
+                    navigate('/');
                 }
             }
         } else {
@@ -49,10 +54,10 @@ const Layout = () => {
 
     return (
         <>
-            <NotificationCentral />
+            <NotificationCentral/>
             <Box>
                 <AppBar
-                    position='sticky'
+                    position="sticky"
                     sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -60,10 +65,17 @@ const Layout = () => {
                         padding: 2
                     }}
                 >
-                    <Box>
-                        Rubicon's AC Registration service
+                    <Box display="flex" flexDirection="row" alignItems="center">
+                        <Link to={user ? '/dashboard' : '/'}>
+                            <img src={AppLogo} alt="AppLogo" style={{width: 40, height: 31}}/>
+                        </Link>
+                        <Link to={user ? '/dashboard' : '/'} style={{textDecoration: 'none'}}>
+                            <Typography ml={2} color="white">
+                                Rubicon's AC Registration service
+                            </Typography>
+                        </Link>
                     </Box>
-                    <Box display='flex' flexDirection='row'>
+                    <Box display="flex" flexDirection="row" alignItems="center">
                         {
                             user ?
                                 <Link to="#" onClick={handleLogOut} style={LinkStyle}>
@@ -82,11 +94,10 @@ const Layout = () => {
                                     </Link>
                                 </>
                         }
-
                     </Box>
                 </AppBar>
             </Box>
-            <Outlet />
+            <Outlet/>
         </>
     )
 }
